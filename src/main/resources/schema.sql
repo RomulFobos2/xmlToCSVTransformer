@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS article
+(
+id_art int AUTO_INCREMENT PRIMARY KEY,
+name  varchar(255),
+code varchar(255),
+username varchar(255),
+guid varchar(255)
+);
+
+INSERT INTO article VALUES
+(1, 'Батон нарезной в/с 0.4кг', '1010050114', 'WHS', '6992B998083711DC87F900093D12899D'),
+(2, 'Кофе', '1010058199', 'US2', '6992B998083711DC87F900093D120002'),
+(3, 'Молоко', '1010058188', 'US3', '6992B998083711DC87F900093D120003'),
+(4, 'Яйцо', '1010058177', 'US4', '6992B998083711DC87F900093D120004')
+ON DUPLICATE KEY UPDATE name=VALUES(name), code=VALUES(code), username=VALUES(username), guid=VALUES(guid);

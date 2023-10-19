@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="${db.urlDB}"/>
+        <property name="username" value="${db.usernameDB}"/>
+        <property name="password" value="${db.passwordDB}"/>
+    </bean>
+
+    <bean id="dataSourceInitializer" class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="databasePopulator">
+            <bean class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
+                <property name="scripts">
+                    <list>
+                        <value>classpath:schema.sql</value>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="dbRepo" class="com.tander.xmlToCSVTransformer.repo.DBRepo">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+        <constructor-arg name="sqlSelect" value="${db.sql.select}"/>
+    </bean>
+
+    <bean id="xmlCreator" class="com.tander.xmlToCSVTransformer.service.XMLCreator">
+        <constructor-arg name="xmlFileName" value="${xml.filename}"/>
+        <constructor-arg name="xmlTransformFileName" value="${xml.transform.filename}"/>
+        <constructor-arg name="templateXML" value="${xslt.template}"/>
+        <constructor-arg name="templateCSV" value="${csv.template}"/>
+        <constructor-arg name="csvFileName" value="${csv.filename}"/>
+    </bean>
+
+</beans>
